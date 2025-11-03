@@ -9,3 +9,5 @@ data:
   VITE_BASE_URL: "http://localhost:3000/"
   VITE_TMDB_IMAGE_BASE_URL: "https://image.tmdb.org/t/p/original"
   CLERK_PUBLISHABLE_KEY: "pk_test_YWxlcnQtYXBoaWQtNjYuY2xlcmsuYWNjb3VudHMuZGV2JA"
+  MONGODB_URL: "mongodb+srv://movieSeatBooking:movieSeatBooking123@cluster0.v9sxc7w.mongodb.net"
+  TMDM_API_KEY: "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ZmUxNGRjODJmZDYzMGZmNWNkYmFkODdhMTlmZDM1ZSIsIm5iZiI6MTc1MTIxOTM2My4zOTM5OTk4LCJzdWIiOiI2ODYxN2NhMzYwNTQ5MTcyYmU5MTViM2UiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.mflFwhztcSIX-4I4ACEe3dl-M_Br35_fQvVi5uyfHtE"
