@@ -3,11 +3,25 @@ kind: ConfigMap
 metadata:
   name: moviebooking-config
 data:
-  # Only non-sensitive/public config should go here
+  # Public configuration values (safe to expose, no sensitive data)
+  
+  # Currency display for UI
   VITE_CURRENCY: "$"
+  
+  # Clerk public key for frontend authentication
   VITE_CLERK_PUBLISHABLE_KEY: "pk_test_YWxlcnQtYXBoaWQtNjYuY2xlcmsuYWNjb3VudHMuZGV2JA"
+  
+  # Backend API base URL for frontend requests
   VITE_BASE_URL: "http://localhost:3000/"
+  
+  # TMDB (movie database) image CDN URL
   VITE_TMDB_IMAGE_BASE_URL: "https://image.tmdb.org/t/p/original"
+  
+  # Clerk key for backend (also public)
   CLERK_PUBLISHABLE_KEY: "pk_test_YWxlcnQtYXBoaWQtNjYuY2xlcmsuYWNjb3VudHMuZGV2JA"
+  
+  # MongoDB connection URL (mounted from K8s secret in production)
   MONGODB_URL: "mongodb+srv://movieSeatBooking:movieSeatBooking123@cluster0.v9sxc7w.mongodb.net"
+  
+  # TMDB API key for fetching movie data
   TMDM_API_KEY: "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ZmUxNGRjODJmZDYzMGZmNWNkYmFkODdhMTlmZDM1ZSIsIm5iZiI6MTc1MTIxOTM2My4zOTM5OTk4LCJzdWIiOiI2ODYxN2NhMzYwNTQ5MTcyYmU5MTViM2UiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.mflFwhztcSIX-4I4ACEe3dl-M_Br35_fQvVi5uyfHtE"

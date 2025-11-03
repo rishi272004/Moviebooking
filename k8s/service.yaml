@@ -3,10 +3,13 @@ kind: Service
 metadata:
   name: moviebooking-service
 spec:
+  # LoadBalancer exposes service to external traffic (accessible from localhost:80)
   type: LoadBalancer
   selector:
     app: moviebooking
   ports:
+    # External port (localhost:80)
     - port: 80
+      # Pod internal port (container port 3000)
       targetPort: 3000
       protocol: TCP

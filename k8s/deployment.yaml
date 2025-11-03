@@ -5,6 +5,7 @@ metadata:
   labels:
     app: moviebooking
 spec:
+  # Run 2 replicas for High Availability (load balancing)
   replicas: 2
   selector:
     matchLabels:
@@ -16,12 +17,18 @@ spec:
     spec:
       containers:
         - name: moviebooking
+          # Docker image from Docker Hub (auto-updated by CI/CD)
           image: rishi272004/moviebooking:latest
+          # Always pull latest image from registry
           imagePullPolicy: Always
           ports:
+            # Backend runs on port 3000
             - containerPort: 3000
+          # Load environment variables from ConfigMap and Secrets
           envFrom:
+            # Non-sensitive config (public values)
             - configMapRef:
                 name: moviebooking-config
+            # Sensitive config (credentials, API keys)
             - secretRef:
                 name: moviebooking-secrets

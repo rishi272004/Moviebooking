@@ -1,53 +1,65 @@
 name: CI - Build & Push Docker Image
 
+# Trigger pipeline on code push or pull requests to main branch
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ] # Auto-build when code is pushed
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" ] # Also build on PRs
 
 jobs:
   build:
+    # Run on GitHub's Ubuntu server
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
 
     steps:
+      # Step 1: Download code from repository
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # Step 2: Setup Node.js environment
       - name: Setup Node.js (18.x)
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
+      # Step 3: Verify Node.js is ready
       - name: Print Node.js version (non-sensitive)
         run: node -v
 
+      # Step 4: Setup QEMU for multi-architecture builds (amd64, arm64)
       - name: Set up QEMU (for multi-platform builds)
         uses: docker/setup-qemu-action@v2
 
+      # Step 5: Setup Docker Buildx for advanced building
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      # Step 6: Login to Docker Hub with credentials from GitHub Secrets
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # Step 7: Build Docker image and push to Docker Hub
+      # - Builds for both amd64 and arm64 architectures
+      # - Tags with 'latest' and git commit SHA for version tracking
+      # - Uses GitHub Actions cache for faster builds
       - name: Build and push Docker image (with build cache)
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          platforms: linux/amd64,linux/arm64
+          context: . # Build from project root
+          file: ./Dockerfile # Use Dockerfile from root
+          push: true # Upload image to Docker Hub
+          platforms: linux/amd64,linux/arm64 # Support multiple CPU architectures
           tags: |
-            rishi272004/moviebooking:latest
-            rishi272004/moviebooking:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+            rishi272004/moviebooking:latest # Latest version tag
+            rishi272004/moviebooking:${{ github.sha }} # Unique tag per commit
+          cache-from: type=gha # Use GitHub Actions cache
+          cache-to: type=gha,mode=max # Save cache for next build
