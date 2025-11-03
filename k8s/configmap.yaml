@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: moviebooking-config
+data:
+  # Only non-sensitive/public config should go here
+  VITE_CURRENCY: "$"
+  VITE_CLERK_PUBLISHABLE_KEY: "pk_test_YWxlcnQtYXBoaWQtNjYuY2xlcmsuYWNjb3VudHMuZGV2JA"
+  VITE_BASE_URL: "http://localhost:3000/"
+  VITE_TMDB_IMAGE_BASE_URL: "https://image.tmdb.org/t/p/original"
+  CLERK_PUBLISHABLE_KEY: "pk_test_YWxlcnQtYXBoaWQtNjYuY2xlcmsuYWNjb3VudHMuZGV2JA"

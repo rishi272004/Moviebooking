@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moviebooking-deployment
+  labels:
+    app: moviebooking
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: moviebooking
+  template:
+    metadata:
+      labels:
+        app: moviebooking
+    spec:
+      containers:
+        - name: moviebooking
+          image: rishi272004/moviebooking:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: moviebooking-config
+            - secretRef:
+                name: moviebooking-secrets

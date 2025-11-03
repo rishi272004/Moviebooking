@@ -1,0 +1,11 @@
+node_modules
+client/node_modules
+server/node_modules
+.git
+.github
+.env
+*.log
+dist
+build
+README.md
+.vscode
