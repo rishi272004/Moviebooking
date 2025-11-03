@@ -23,24 +23,41 @@
 
 ## ⚙️ Tech Stack
 
+| Component | Technology |
+|-----------|------------|
+| **Frontend** | React 19, Vite, Tailwind CSS, Clerk |
+| **Backend** | Node.js, Express, MongoDB |
+| **Payments** | Stripe |
+| **Background Jobs** | Inngest |
+| **Image Storage** | Cloudinary |
+| **Authentication** | Clerk |
+| **Deployment (Frontend)** | Vercel |
+| **Deployment (Backend)** | Kubernetes (optional) |
+
+---
 
 ## 🚀 Deployment Guide
 
-### CI (GitHub Actions)
+### **Frontend (Vercel)**
+- Auto-deployed on push to `main`
+- React app builds automatically via Vite
+- No manual setup needed
 
-- On push to `main` or when a pull request targets `main`, the GitHub Actions workflow builds a Docker image and pushes it to Docker Hub as `rishi272004/moviebooking:latest`.
-- The workflow file is at: `.github/workflows/ci.yml`.
-- Make sure you add the following repository secrets in GitHub: `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`.
+### **Backend (Kubernetes)**
 
-### CD (Kubernetes)
+**Option 1: Local Development**
+```bash
+cd server
+npm install
+npm run server
+```
 
-Manifests are provided in the `k8s/` folder:
+**Option 2: Kubernetes Deployment**
 
-- `k8s/configmap.yaml`  — non-sensitive config values
-- `k8s/deployment.yaml` — Deployment that pulls `rishi272004/moviebooking:latest`
-- `k8s/service.yaml`    — LoadBalancer Service exposing the app
-
-Apply the manifests:
+Manifests are in the `k8s/` folder:
+- `k8s/configmap.yaml` — Non-sensitive config values
+- `k8s/deployment.yaml` — Backend deployment 
+- `k8s/service.yaml` — Service to expose the app
 
 ```bash
 kubectl apply -f k8s/configmap.yaml
@@ -48,37 +65,31 @@ kubectl apply -f k8s/deployment.yaml
 kubectl apply -f k8s/service.yaml
 ```
 
-IMPORTANT: Do NOT store secrets in the repository. Create Kubernetes secrets manually (example):
-
+**Create Kubernetes secrets (replace with your actual values):**
 ```bash
 kubectl create secret generic moviebooking-secrets \
-	--from-literal=CLERK_SECRET_KEY="<your_key>" \
-	--from-literal=INNGEST_EVENT_KEY="<your_key>" \
-	--from-literal=INNGEST_SIGNING_KEY="<your_key>" \
-	--from-literal=STRIPE_PUBLISHABLE_KEY="<your_key>" \
-	--from-literal=STRIPE_SECRET_KEY="<your_key>" \
-	--from-literal=STRIPE_WEBHOOK_SECRET="<your_key>"
+  --from-literal=CLERK_SECRET_KEY="<your_key>" \
+  --from-literal=INNGEST_EVENT_KEY="<your_key>" \
+  --from-literal=INNGEST_SIGNING_KEY="<your_key>" \
+  --from-literal=STRIPE_PUBLISHABLE_KEY="<your_key>" \
+  --from-literal=STRIPE_SECRET_KEY="<your_key>" \
+  --from-literal=STRIPE_WEBHOOK_SECRET="<your_key>" \
+  --from-literal=MONGODB_URL="<your_url>"
 ```
 
-After the Service is created, get the external IP:
+### **CI/CD Pipeline (GitHub Actions)**
+- Workflow: `.github/workflows/ci.yml`
+- Builds Docker image on push to `main`
+- Pushes to Docker Hub: `rishi272004/moviebooking:latest`
 
-```bash
-kubectl get service moviebooking-service
-```
-
-Notes & best practices:
-
-- Store sensitive values in GitHub Actions secrets (for CI) and Kubernetes Secrets (for runtime).
-- The CI workflow uses Docker Buildx and caching to speed up builds; it logs only non-sensitive information and uses GitHub Secrets for credentials.
-- If deploying in production, consider adding:
-	- readiness/liveness probes in `deployment.yaml`
-	- resource requests/limits
-	- rolling update strategy and PodDisruptionBudgets
-	- image tag pinning (avoid `latest`) and automated rollouts
+**Required GitHub Secrets:**
+- `DOCKERHUB_USERNAME`
+- `DOCKERHUB_TOKEN`
 
 ---
 
-✅ Final setup summary:
-
-- GitHub Actions builds and pushes the Docker image to Docker Hub.
-- Kubernetes (`k8s/`) pulls the image and runs the app. Secrets are created manually and never committed to the repo.
+✅ **Summary:**
+- **Frontend** deploys automatically to Vercel
+- **Backend** runs on Kubernetes (or locally during development)
+- **Docker** packages the backend for consistent deployment
+- **GitHub Actions** automates Docker image builds

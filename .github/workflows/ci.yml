@@ -39,7 +39,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push Backend Docker image (with build cache)
+      - name: Build and push Docker image (with build cache)
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -49,18 +49,5 @@ jobs:
           tags: |
             rishi272004/moviebooking:latest
             rishi272004/moviebooking:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Build and push Frontend Docker image (with build cache)
-        uses: docker/build-push-action@v5
-        with:
-          context: ./client
-          file: ./client/Dockerfile
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: |
-            rishi272004/moviebooking-frontend:latest
-            rishi272004/moviebooking-frontend:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
