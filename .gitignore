@@ -12,3 +12,5 @@ coverage/
 *.local
 /.idea/
 /.parcel-cache/
+k8s/secrets.yaml
+k8s/*-secrets.yaml
